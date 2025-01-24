@@ -2,6 +2,7 @@ jdbc\Credentials.class
 jdbc\JDBC.class
 personnel\Passerelle.class
 personnel\SauvegardeImpossible.class
+personnel\EmployeTest.class
 personnel\ImpossibleDeSupprimerRoot.class
 personnel\GestionPersonnel.class
 commandLine\EmployeConsole.class
@@ -11,3 +12,4 @@ personnel\Employe.class
 personnel\DroitsInsuffisants.class
 commandLine\LigueConsole.class
 serialisation\Serialization.class
+gui\MainGUI.class

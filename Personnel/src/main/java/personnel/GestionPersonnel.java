@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+
+import java.util.List;
+
+import java.util.ArrayList;
+
 /**
  * Gestion du personnel. Un seul objet de cette classe existe.
  * Il n'est pas possible d'instancier directement cette classe, 
@@ -113,4 +118,10 @@ public class GestionPersonnel implements Serializable
 	{
 		return root;
 	}
+    public void addUser(String username, String password, String email, String firstName, String lastName, String league) {
+
+        // Implementation for adding a user
+
+    }
+
 }

@@ -100,15 +100,48 @@ public class LigueConsole
 		return new Option("ajouter un employé", "a",
 				() -> 
 				{
-					ligue.addEmploye(getString("nom : "), 
-						getString("prenom : "), getString("mail : "), 
-						getString("password : "), 
-						LocalDate.parse(getString("date de début (yyyy-MM-dd) : ")), 
-						LocalDate.parse(getString("date de fin (yyyy-MM-dd) : ")));
+					String nom = getString("nom : ");
+					String prenom = getString("prenom : ");
+					String mail = getString("mail : ");
+					String password = getString("password : ");
+					
+					LocalDate dateDebut = null;
+					LocalDate dateFin = null;
+
+					// Validation de la date de début
+					while (dateDebut == null) {
+						try {
+							String dateDebutStr = getString("date de début (yyyy-MM-dd) : ");
+							dateDebut = LocalDate.parse(dateDebutStr);  // Essaye de parser la date
+						} catch (Exception e) {
+							System.out.println("Erreur : format de date invalide pour la date de début. Essayez encore (yyyy-MM-dd).");
+						}
+					}
+
+					// Validation de la date de fin
+					while (dateFin == null) {
+						try {
+							String dateFinStr = getString("date de fin (yyyy-MM-dd) : ");
+							dateFin = LocalDate.parse(dateFinStr);  // Essaye de parser la date
+						} catch (Exception e) {
+							System.out.println("Erreur : format de date invalide pour la date de fin. Essayez encore (yyyy-MM-dd).");
+						}
+					}
+
+					// Si la date de fin est avant la date de début, on l'ajuste
+					if (dateFin.isBefore(dateDebut)) {
+						System.out.println("La date de fin est avant la date de début... on va corriger ça !");
+						dateFin = dateDebut.plusDays(1); // Fixela date de fin à un jour après la date de début
+					}
+
+					// Ajouter l'employé avec les dates validées
+					ligue.addEmploye(nom, prenom, mail, password, dateDebut, dateFin);
 				}
 		);
 	}
-	
+
+
+		
 	private Menu gererEmployes(Ligue ligue)
 	{
 		Menu menu = new Menu("Gérer les employés de " + ligue.getNom(), "e");

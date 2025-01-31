@@ -23,7 +23,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	private LocalDate dateArrivee;
     private LocalDate dateDepart;
 	
-	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
 		this.nom = nom;
@@ -54,21 +54,6 @@ public class Employe implements Serializable, Comparable<Employe>
             throw new IllegalArgumentException("Date de départ doit être supérieure ou égale à la date d'arrivée.");
         }
         this.dateDepart = dateDepart;
-    }
-
-    public void testDateArrivéeAndDateDepart() {
-        Employe employe = new Employe(null, null, "John Doe", "john", "john@example.com", "password", LocalDate.of(2022, 1, 1), LocalDate.of(2023, 1, 1));
-        assertEquals("2022-01-01", employe.getDateArrivée().toString());
-        assertEquals("2023-01-01", employe.getDateDepart().toString());
-
-        employe.setDateDepart(LocalDate.of(2021, 1, 1));
-        assertEquals("2021-01-01", employe.getDateDepart().toString());
-        try {
-            employe.setDateDepart(LocalDate.of(2020, 12, 31));
-            fail("Date de départ doit être supérieure ou égale à la date d'arrivée.");
-        } catch (IllegalArgumentException e) {
-            // Expected exception
-        }
     }
 	
 	/**

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 
 import commandLineMenus.List;
+import commandLineMenus.ListAction;
+import commandLineMenus.ListData;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
 
@@ -72,7 +74,7 @@ public class LigueConsole
 		Menu menu = new Menu("Editer " + ligue.getNom());
 		menu.add(afficher(ligue));
 		menu.add(gererEmployes(ligue));
-		//menu.add(changerAdministrateur(ligue));
+		menu.add(changerAdministrateur(ligue));
 		menu.add(changerNom(ligue));
 		menu.add(supprimer(ligue));
 		menu.addBack("q");
@@ -144,10 +146,17 @@ public class LigueConsole
 		return new Option("Supprimer", "d", () -> employe.remove());
 	}
 	
-	private List<Employe> changerAdministrateur(final Ligue ligue)
+	private Option changerAdministrateur(final Ligue ligue)
 	{
-		return null;
-	}		
+		return new Option("Changer l'administrateur", "a", 
+			() -> {
+				java.util.List<Employe> employesList = new ArrayList<>(ligue.getEmployes());
+				Employe employe = employesList.get(Integer.parseInt(getString("Entrez l'index de l'employé à désigner administrateur : ")) - 1);
+				ligue.setAdministrateur(employe);
+				System.out.println(employe.getNom() + " " + employe.getPrenom() + " est maintenant l'administrateur de la ligue " + ligue.getNom());
+			});
+	}
+
 
 	private Option supprimer(Ligue ligue)
 	{

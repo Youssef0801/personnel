@@ -23,17 +23,24 @@ public class Employe implements Serializable, Comparable<Employe>
 	private LocalDate dateArrivee;
     private LocalDate dateDepart;
 	
-	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
-	{
-		this.gestionPersonnel = gestionPersonnel;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.password = password;
-		this.mail = mail;
-		this.ligue = ligue;
-		this.dateArrivee = dateArrivee;
+	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
+    {
+        this(gestionPersonnel, ligue, -1, nom, prenom, mail, password, dateArrivee, dateDepart);
+        this.id = gestionPersonnel.insert(this);
+    }
+	
+	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, int id, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+    {
+        this.gestionPersonnel = gestionPersonnel;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.password = password;
+        this.mail = mail;
+        this.ligue = ligue;
+        this.dateArrivee = dateArrivee;
         this.dateDepart = dateDepart;
-	}
+        this.id = id;
+    }
 
 	// Getters and setters for dateArrivée and dateDepart
 

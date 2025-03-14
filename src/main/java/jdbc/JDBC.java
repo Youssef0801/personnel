@@ -31,23 +31,23 @@ public class JDBC implements Passerelle
 	}
 	
 	@Override
-	public GestionPersonnel getGestionPersonnel() 
-	{
-		GestionPersonnel gestionPersonnel = new GestionPersonnel();
-		try 
-		{
-			String requete = "select * from ligue";
-			Statement instruction = connection.createStatement();
-			ResultSet ligues = instruction.executeQuery(requete);
-			while (ligues.next())
-				gestionPersonnel.addLigue(ligues.getInt(1), ligues.getString(2));
-		}
-		catch (SQLException e)
-		{
-			System.out.println(e);
-		}
-		return gestionPersonnel;
-	}
+	public GestionPersonnel getGestionPersonnel() {
+        GestionPersonnel gestionPersonnel = new GestionPersonnel();
+        try (Connection connection = DriverManager.getConnection(
+                Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM Ligue")) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom");
+                gestionPersonnel.addLigue(id, nom);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return gestionPersonnel;
+    }
 
 	@Override
 	public void sauvegarderGestionPersonnel(GestionPersonnel gestionPersonnel) throws SauvegardeImpossible 
@@ -69,23 +69,23 @@ public class JDBC implements Passerelle
 	}
 	
 	@Override
-	public int insert(Ligue ligue) throws SauvegardeImpossible 
-	{
-		try 
-		{
-			PreparedStatement instruction;
-			instruction = connection.prepareStatement("insert into ligue (nom) values(?)", Statement.RETURN_GENERATED_KEYS);
-			instruction.setString(1, ligue.getNom());		
-			instruction.executeUpdate();
-			ResultSet id = instruction.getGeneratedKeys();
-			id.next();
-			return id.getInt(1);
-		} 
-		catch (SQLException exception) 
-		{
-			exception.printStackTrace();
-			throw new SauvegardeImpossible(exception);
-		}		
+		public int insert(Ligue ligue) throws SauvegardeImpossible {
+	    String sql = "INSERT INTO Ligue (nom) VALUES (?)";
+	    try (Connection connection = DriverManager.getConnection(
+	            Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
+	         PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+	        statement.setString(1, ligue.getNom());
+	        statement.executeUpdate();
+	        
+	        ResultSet rs = statement.getGeneratedKeys();
+	        if (rs.next()) {
+	            return rs.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        throw new SauvegardeImpossible(e);
+	    }
+	    return -1;
 	}
 
 	@Override

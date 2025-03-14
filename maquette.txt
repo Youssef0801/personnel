@@ -1,0 +1,108 @@
++-------------------------------------+
+|          Connexion                  |
++-------------------------------------+
+| Nom d'utilisateur : [___________]   |
+| Mot de passe : [__________________] |
+|                                     |
+| [ OK ] [ Annuler ]                  |
++-------------------------------------+
+
++-------------------------------------+
+|          Menu Employé               |
++-------------------------------------+
+| [ Voir Annuaire ]                   |
+| [ Quitter ]                         |
++-------------------------------------+
+
++-------------------------------------+
+|          Menu Administrateur        |
++-------------------------------------+
+| [ Créer Ligue ]                     |
+| [ Gérer Utilisateurs ]              |
+| [ Gérer Ligues ]                    |
+| [ Déconnexion ]                     |
++-------------------------------------+
+
++-------------------------------------+
+|            Créer Ligue              |
++-------------------------------------+
+| Nom de la ligue : [______________]  |
+|                                     |
+| [ Créer ] [ Annuler ]               |
++-------------------------------------+
+
++-------------------------------------+
+|         Gestion des Utilisateurs    |
++-------------------------------------+
+| Liste des utilisateurs :            |
+| [ Liste déroulante des utilisateurs ]|
+|                                     |
+| [ Ajouter Utilisateur ]             |
+| [ Modifier Utilisateur ]            |
+| [ Supprimer Utilisateur ]           |
++-------------------------------------+
+
++-------------------------------------+
+|          Créer Utilisateur          |
++-------------------------------------+
+| Nom d'utilisateur : [___________]   |
+| Mot de passe : [______________]     |
+| Email : [____________________]      |
+| Prénom : [____________________]     |
+| Nom : [____________________]        |
+| Ligue : [ Liste déroulante des ligues ]|
+|                                     |
+| [ Créer ] [ Annuler ]               |
++-------------------------------------+
+
++-------------------------------------+
+|           Gestion des Ligues        |
++-------------------------------------+
+| Liste des ligues :                  |
+| [ Liste déroulante des ligues ]     |
+|                                     |
+| [ Ajouter Ligue ]                   |
+| [ Modifier Ligue ]                  |
+| [ Supprimer Ligue ]                 |
++-------------------------------------+
+
++-------------------------------------+
+|          Modifier Ligue             |
++-------------------------------------+
+| Nom de la ligue : [______________]  |
+|                                     |
+| [ Enregistrer ] [ Annuler ]         |
++-------------------------------------+
+
++-------------------------------------+
+|          Menu Super-Administrateur  |
++-------------------------------------+
+| [ Gérer Administrateurs ]           |
+| [ Gérer Ligues ]                    |
+| [ Gérer Employés ]                  |
+| [ Déconnexion ]                     |
++-------------------------------------+
+
++-------------------------------------+
+|         Gestion des Administrateurs |
++-------------------------------------+
+| Liste des administrateurs :         |
+| [ Liste déroulante des administrateurs ]|
+|                                     |
+| [ Ajouter Administrateur ]          |
+| [ Modifier Administrateur ]         |
+| [ Supprimer Administrateur ]        |
++-------------------------------------+
+
++-------------------------------------+
+|          Créer Administrateur       |
++-------------------------------------+
+| Nom d'utilisateur : [___________]   |
+| Mot de passe : [______________]     |
+| Email : [____________________]      |
+| Prénom : [____________________]     |
+| Nom : [____________________]        |
+| Ligue : [ Liste déroulante des ligues ]|
+|                                     |
+| [ Créer ] [ Annuler ]               |
++-------------------------------------+

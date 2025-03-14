@@ -144,6 +144,11 @@ public class GestionPersonnel implements Serializable {
 		this.insert(root);
 		return root;
 	}
+	public Employe addRoot(int id, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
+	{
+		root = new Employe(this, null, -1, nom, "", "", password, null, null);
+		return root;
+	}
 
 	public void addUser(String username, String password, String email, String firstName, String lastName,
 			String league) {

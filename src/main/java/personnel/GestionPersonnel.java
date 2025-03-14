@@ -116,6 +116,9 @@ public class GestionPersonnel implements Serializable {
 		ligues.add(ligue);
 		return ligue;
 	}
+	public void updateLigue(Ligue ligue) throws SauvegardeImpossible {
+	    passerelle.update(ligue);
+	}
 
 	void remove(Ligue ligue) {
 		ligues.remove(ligue);
@@ -123,6 +126,10 @@ public class GestionPersonnel implements Serializable {
 
 	int insert(Ligue ligue) throws SauvegardeImpossible {
 		return passerelle.insert(ligue);
+	}
+	void update(Ligue ligue) throws SauvegardeImpossible
+	{
+	    passerelle.update(ligue);
 	}
 
 	int insert(Employe employe) throws SauvegardeImpossible {
@@ -139,15 +146,10 @@ public class GestionPersonnel implements Serializable {
 		return root;
 	}
 
-	public Employe addRoot(String nom, String password) throws SauvegardeImpossible{
-		root = new Employe(this, null, -1, nom, "", "", password, null, null);
-		this.insert(root);
-		return root;
-	}
-	public Employe addRoot(int id, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
-	{
-		root = new Employe(this, null, -1, nom, "", "", password, null, null);
-		return root;
+	public Employe addRoot(String nom, String password) {
+		Employe employe = new Employe(this, null, -1, nom, "", "", password, null, null);
+		employes.add(employe);
+		return employe;
 	}
 
 	public void addUser(String username, String password, String email, String firstName, String lastName,

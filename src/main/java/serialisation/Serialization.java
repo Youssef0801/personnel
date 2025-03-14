@@ -12,7 +12,7 @@ import main.java.personnel.Ligue;
 import main.java.personnel.Employe;
 import main.java.personnel.SauvegardeImpossible;
 
-public class Serialization implements Passerelle
+public abstract class Serialization implements Passerelle
 {
 	private static final String FILE_NAME = "GestionPersonnel.srz";
 

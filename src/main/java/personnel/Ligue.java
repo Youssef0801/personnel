@@ -136,4 +136,9 @@ public class Ligue implements Serializable, Comparable<Ligue>
     {
         return nom;
     }
+
+	public int getId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

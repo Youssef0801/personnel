@@ -14,6 +14,10 @@ public class SauvegardeImpossible extends Exception
 		this.exception = exception;
 	}
 	
+	public SauvegardeImpossible(String string) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void printStackTrace() 
 	{

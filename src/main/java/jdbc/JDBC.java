@@ -37,25 +37,8 @@ public class JDBC implements Passerelle {
 				String nom = resultSet.getString("nom");
 				gestionPersonnel.addLigue(id, nom);
 			}
-		} 
-			// Lire les informations du root depuis la base de données
-			ResultSet rootLecturePoto = statement.executeQuery("SELECT * FROM Employe WHERE role = 'root'");
-			if (rootLecturePoto.next()) {
-				int rootId = rootLecturePoto.getInt("id");
-				String rootNom = rootLecturePoto.getString("nom");
-				String rootPrenom = rootLecturePoto.getString("prenom");
-				String rootMail = rootLecturePoto.getString("mail");
-				String rootPassword = rootLecturePoto.getString("password");
-				LocalDate rootDateArrivee = rootLecturePoto.getDate("dateArrivee").toLocalDate();
-				LocalDate rootDateDepart = rootLecturePoto.getDate("dateDepart") != null ? rootLecturePoto.getDate("dateDepart").toLocalDate() : null;
-				try {
-					gestionPersonnel.addRoot(rootId, rootNom, rootPrenom, rootMail, rootPassword, rootDateArrivee, rootDateDepart);
-				} catch (SauvegardeImpossible erreurDeMaladeMentale) {
-					erreurDeMaladeMentale.printStackTrace();
-				}
-			}
-		} catch (SQLException erreurDeMaladeMentale) {
-			erreurDeMaladeMentale.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return gestionPersonnel;
 	}
@@ -92,6 +75,25 @@ public class JDBC implements Passerelle {
 			throw new SauvegardeImpossible(e);
 		}
 		return -1;
+	}
+	@Override
+	public void update(Ligue ligue) throws SauvegardeImpossible {
+	    String sql = "UPDATE Ligue SET nom = ? WHERE id = ?";
+	    try (Connection connection = DriverManager.getConnection(
+	            Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+	        statement.setString(1, ligue.getNom());
+	        statement.setInt(2, ligue.getId());
+
+	        int rowsUpdated = statement.executeUpdate();
+	        if (rowsUpdated == 0) {
+	            throw new SauvegardeImpossible("Aucune ligue trouvée avec cet ID.");
+	        }
+
+	    } catch (SQLException e) {
+	        throw new SauvegardeImpossible(e);
+	    }
 	}
 
 	public int insert(Employe employe) throws SauvegardeImpossible {

@@ -20,9 +20,10 @@ public class Employe implements Serializable, Comparable<Employe>
 	private String nom, prenom, password, mail;
 	private int id = -1 ;
 	private Ligue ligue;
+	private int id = -1;
 	private GestionPersonnel gestionPersonnel;
 	private LocalDate dateArrivee;
-    private LocalDate dateDepart;
+    	private LocalDate dateDepart;
 	
 	public Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
     {

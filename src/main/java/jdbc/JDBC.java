@@ -54,10 +54,6 @@ public class JDBC implements Passerelle {
 					erreurDeMaladeMentale.printStackTrace();
 				}
 			}
-		} catch (SQLException erreurDeMaladeMentale) {
-			erreurDeMaladeMentale.printStackTrace();
-		}
-		return gestionPersonnel;
 	}
 
 	@Override

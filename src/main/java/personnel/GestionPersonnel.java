@@ -30,8 +30,8 @@ public class GestionPersonnel implements Serializable
 	private Employe root = new Employe(this, null, -1, "root", "", "", "toor", null , null);
 	private SortedSet<Employe> employes;
 	public final static int SERIALIZATION = 1, JDBC = 2, 
-			TYPE_PASSERELLE = SERIALIZATION;  
-	private static Passerelle passerelle = TYPE_PASSERELLE == JDBC ? new jdbc.JDBC() : new serialisation.Serialization();		
+			TYPE_PASSERELLE = JDBC;  
+	private static Passerelle passerelle = new JDBC();	
 	
 	/**
 	 * Retourne l'unique instance de cette classe.

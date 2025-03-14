@@ -30,7 +30,7 @@ public class GestionPersonnel implements Serializable
 	private Employe root = new Employe(this, null, "root", "", "", "toor", null , null);
 	public final static int SERIALIZATION = 1, JDBC = 2, 
 			TYPE_PASSERELLE = JDBC;  
-	private static Passerelle passerelle = TYPE_PASSERELLE == JDBC ? new JDBC() : new Serialization();	
+	private static Passerelle passerelle = new JDBC();
 	
 	/**
 	 * Retourne l'unique instance de cette classe.
@@ -84,7 +84,28 @@ public class GestionPersonnel implements Serializable
 	
 	public SortedSet<Ligue> getLigues()
 	{
-		return Collections.unmodifiableSortedSet(ligues);
+	    ligues.clear(); // Vider l'ancienne liste pour éviter les doublons
+	    GestionPersonnel gestionPersonnel = passerelle.getGestionPersonnel();
+	    ligues.addAll(gestionPersonnel.getLigues());
+	    return Collections.unmodifiableSortedSet(ligues);
+	}
+
+	public static void main(String[] args) {
+	    GestionPersonnel gestion = GestionPersonnel.getGestionPersonnel();
+	    
+	    // Ajouter une nouvelle ligue
+	    try {
+	        Ligue nouvelleLigue = gestion.addLigue("Nouvelle Ligue JDBC");
+	        gestion.insert(nouvelleLigue);
+	    } catch (SauvegardeImpossible e) {
+	        e.printStackTrace();
+	    }
+
+	    // Vérifier l'ajout en affichant toutes les ligues
+	    System.out.println("📌 Ligues après ajout :");
+	    for (Ligue ligue : gestion.getLigues()) {
+	        System.out.println("- " + ligue.getNom());
+	    }
 	}
 
 	public Ligue addLigue(String nom) throws SauvegardeImpossible

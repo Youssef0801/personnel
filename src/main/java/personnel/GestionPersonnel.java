@@ -5,7 +5,11 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import main.java.serialisation.Serialization;
+import java.time.LocalDate;
+import main.java.personnel.GestionPersonnel;
+
+
+
 import main.java.jdbc.JDBC;
 
 import java.util.List;
@@ -157,6 +161,12 @@ public class GestionPersonnel implements Serializable {
 
 		// Implementation for adding a user
 
+	}
+
+	public void addRoot(int rootId, String rootNom, String rootPrenom, String rootMail, String rootPassword,
+			LocalDate rootDateArrivee, LocalDate rootDateDepart) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

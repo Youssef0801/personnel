@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.time.LocalDate;
+import java.sql.*;
+import main.java.personnel.GestionPersonnel;
+
 
 /**
  * Représente une ligue. Chaque ligue est reliée à une liste

@@ -6,17 +6,17 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import main.java.personnel.*;
 
 public class JDBC implements Passerelle {
-	Connection connection;
+	private Connection connection;
 
 	public JDBC() {
 		try {
 			Class.forName(Credentials.getDriverClassName());
-			connection = DriverManager.getConnection(Credentials.getUrl(), Credentials.getUser(),
-					Credentials.getPassword());
+			connection = DriverManager.getConnection(Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
 		} catch (ClassNotFoundException e) {
 			System.out.println("Pilote JDBC non installé.");
 		} catch (SQLException e) {
@@ -38,29 +38,29 @@ public class JDBC implements Passerelle {
 				gestionPersonnel.addLigue(id, nom);
 			}
 
+			// Lire les informations du root depuis la base de données
+			try (ResultSet rootLecturePoto = statement.executeQuery("SELECT * FROM Employe WHERE role = 'root'")) {
+				if (rootLecturePoto.next()) {
+					int rootId = rootLecturePoto.getInt("id");
+					String rootNom = rootLecturePoto.getString("nom");
+					String rootPrenom = rootLecturePoto.getString("prenom");
+					String rootMail = rootLecturePoto.getString("mail");
+					String rootPassword = rootLecturePoto.getString("password");
+
+					// Vérification pour éviter NullPointerException sur toLocalDate()
+					LocalDate rootDateArrivee = rootLecturePoto.getDate("dateArrivee") != null 
+							? rootLecturePoto.getDate("dateArrivee").toLocalDate() : null;
+					LocalDate rootDateDepart = rootLecturePoto.getDate("dateDepart") != null 
+							? rootLecturePoto.getDate("dateDepart").toLocalDate() : null;
+
+					gestionPersonnel.addRoot(rootId, rootNom, rootPrenom, rootMail, rootPassword, rootDateArrivee, rootDateDepart);
+				}
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return gestionPersonnel;
-
-		} 
-			// Lire les informations du root depuis la base de données
-			ResultSet rootLecturePoto = statement.executeQuery("SELECT * FROM Employe WHERE role = 'root'");
-			if (rootLecturePoto.next()) {
-				int rootId = rootLecturePoto.getInt("id");
-				String rootNom = rootLecturePoto.getString("nom");
-				String rootPrenom = rootLecturePoto.getString("prenom");
-				String rootMail = rootLecturePoto.getString("mail");
-				String rootPassword = rootLecturePoto.getString("password");
-				LocalDate rootDateArrivee = rootLecturePoto.getDate("dateArrivee").toLocalDate();
-				LocalDate rootDateDepart = rootLecturePoto.getDate("dateDepart") != null ? rootLecturePoto.getDate("dateDepart").toLocalDate() : null;
-				try {
-					gestionPersonnel.addRoot(rootId, rootNom, rootPrenom, rootMail, rootPassword, rootDateArrivee, rootDateDepart);
-				} catch (SauvegardeImpossible erreurDeMaladeMentale) {
-					erreurDeMaladeMentale.printStackTrace();
-				}
-			}
-
 	}
 
 	@Override
@@ -96,8 +96,13 @@ public class JDBC implements Passerelle {
 		}
 		return -1;
 	}
+
 	@Override
 	public void update(Ligue ligue) throws SauvegardeImpossible {
+	    if (ligue.getId() == 0) {
+	        throw new SauvegardeImpossible("Impossible de mettre à jour une ligue sans ID.");
+	    }
+
 	    String sql = "UPDATE Ligue SET nom = ? WHERE id = ?";
 	    try (Connection connection = DriverManager.getConnection(
 	            Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
@@ -116,19 +121,18 @@ public class JDBC implements Passerelle {
 	    }
 	}
 
-	public int insert(Employe employe) throws SauvegardeImpossible {
-		try {
-			PreparedStatement instruction;
-			instruction = connection.prepareStatement("insert into employe (nom) values(?)",
-					Statement.RETURN_GENERATED_KEYS);
+	public int insert(Employe employe) {
+		String sql = "INSERT INTO Employe (nom) VALUES (?)";
+		try (PreparedStatement instruction = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			instruction.setString(1, employe.getNom());
 			instruction.executeUpdate();
 			ResultSet id = instruction.getGeneratedKeys();
-			id.next();
-			return id.getInt(1);
+			if (id.next()) {
+				return id.getInt(1);
+			}
 		} catch (SQLException exception) {
 			exception.printStackTrace();
-			throw new SauvegardeImpossible(exception);
 		}
+		return -1;
 	}
 }

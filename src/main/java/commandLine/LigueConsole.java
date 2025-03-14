@@ -133,7 +133,12 @@ public class LigueConsole
 					}
 
 					// Ajouter l'employé avec les dates validées
-					ligue.addEmploye(nom, prenom, mail, password, dateDebut, dateFin);
+					try {
+						ligue.addEmploye(nom, prenom, mail, password, dateDebut, dateFin);
+					} catch (SauvegardeImpossible e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 		);
 	}

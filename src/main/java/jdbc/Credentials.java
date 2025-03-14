@@ -8,7 +8,7 @@ public class Credentials {
 	private static String port = "3306";
 	private static String database = "gestion_ligues";
 	private static String user = "ligues_user";
-	private static String password = "Youssef123&";
+	private static String password = "Youssef123";
 	
 	static String getUrl() 
 	{

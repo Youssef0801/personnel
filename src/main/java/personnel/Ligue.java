@@ -104,7 +104,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
      * @param dateDepart la date de départ de l'employé (peut être null).
      * @return l'employé créé. 
      */
-    public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
+    public Employe addEmploye(String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart) throws SauvegardeImpossible
     {
         Employe employe = new Employe(this.gestionPersonnel, this, nom, prenom, mail, password, dateArrivee, dateDepart);
         employes.add(employe);

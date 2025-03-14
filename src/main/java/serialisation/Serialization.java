@@ -53,7 +53,6 @@ public class Serialization implements Passerelle
 		return -1;
 	}
 
-	@Override
 	public int insert(Employe employe) throws SauvegardeImpossible
 	{
 		return -1;

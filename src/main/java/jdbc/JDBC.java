@@ -77,7 +77,6 @@ public class JDBC implements Passerelle {
 		return -1;
 	}
 
-	@Override
 	public int insert(Employe employe) throws SauvegardeImpossible {
 		try {
 			PreparedStatement instruction;

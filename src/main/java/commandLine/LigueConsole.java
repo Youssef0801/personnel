@@ -1,4 +1,4 @@
-package commandLine;
+package main.java.commandLine;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
 
@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 
 import commandLineMenus.List;
-import commandLineMenus.ListAction;
-import commandLineMenus.ListData;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
 
-import personnel.*;
+import main.java.personnel.*;
 
 public class LigueConsole 
 {

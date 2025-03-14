@@ -1,6 +1,6 @@
-package commandLine;
+package main.java.commandLine;
 
-import personnel.*;
+import main.java.personnel.*;
 import commandLineMenus.*;
 import static commandLineMenus.rendering.examples.util.InOut.*;
 

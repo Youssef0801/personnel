@@ -1,4 +1,4 @@
-package personnel;
+package main.java.personnel;
 
 import java.io.Serializable;
 import java.util.Collections;

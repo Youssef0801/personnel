@@ -3,12 +3,13 @@
   <groupId>Personnel</groupId>
   <artifactId>Personnel</artifactId>
   <version>2.0</version>
-  
   <build>
-    <sourceDirectory>src/main/java</sourceDirectory>
     <resources>
       <resource>
-        <directory>src/main/resources</directory>
+        <directory>src</directory>
+        <includes>
+          <include>**/*.java</include>
+        </includes>
       </resource>
     </resources>
     <plugins>
@@ -16,85 +17,34 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>1.8</source> <!-- Update if using a newer Java version -->
+          <source>1.8</source>
           <target>1.8</target>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.5.0</version>
-        <configuration>
-          <mainClass>gui.EnhancedMainGUI</mainClass>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>gui.EnhancedMainGUI</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
-  
   <dependencies>
-    <!-- MySQL Driver -->
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.16</version>
-    </dependency>
-    
-    <!-- Command Line Menus -->
-    <dependency>
-      <groupId>CommandLineMenus</groupId>
-      <artifactId>CommandLineMenus</artifactId>
-      <version>2.0</version>
-    </dependency>
-    
-    <!-- JUnit 5 API -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.9.3</version>
-    </dependency>
-    
-    <!-- JUnit 5 Engine -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.9.3</version>
-    </dependency>
+  	<dependency>
+  		<groupId>mysql</groupId>
+  		<artifactId>mysql-connector-java</artifactId>
+  		<version>8.0.16</version>
+  	</dependency>
+	<dependency>
+       <groupId>CommandLineMenus</groupId>
+       <artifactId>CommandLineMenus</artifactId>
+       <version>2.0</version>
+     </dependency>
   </dependencies>
-  
   <repositories>
     <repository>
-      <id>apache</id>
-      <name>apache</name>
-      <url>https://repo.maven.apache.org/maven2</url>
+       <id>apache</id>
+       <name>apache</name>
+       <url>https://repo.maven.apache.org/maven2</url>
     </repository>
     <repository>
-      <id>mereen</id>
-      <name>mereen</name>
-      <url>https://maven.alexandre-mesle.com/maven</url>
+       <id>mereen</id>
+       <name>mereen</name>
+       <url>https://maven.alexandre-mesle.com/maven</url>
     </repository>
   </repositories>
-</project>
+  </project>

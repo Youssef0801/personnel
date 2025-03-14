@@ -1,4 +1,4 @@
-package serialisation;
+package main.java.serialisation;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -6,11 +6,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import personnel.GestionPersonnel;
-import personnel.Ligue;
-import personnel.SauvegardeImpossible;
+import main.java.personnel.*;
 
-public class Serialization implements personnel.Passerelle
+public class Serialization implements Passerelle
 {
 	private static final String FILE_NAME = "GestionPersonnel.srz";
 

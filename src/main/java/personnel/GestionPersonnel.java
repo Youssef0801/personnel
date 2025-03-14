@@ -1,10 +1,12 @@
-package personnel;
+package main.java.personnel;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import main.java.serialisation.Serialization;
+import main.java.jdbc.JDBC;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class GestionPersonnel implements Serializable
 	private Employe root = new Employe(this, null, "root", "", "", "toor", null , null);
 	public final static int SERIALIZATION = 1, JDBC = 2, 
 			TYPE_PASSERELLE = SERIALIZATION;  
-	private static Passerelle passerelle = TYPE_PASSERELLE == JDBC ? new jdbc.JDBC() : new serialisation.Serialization();	
+	private static Passerelle passerelle = TYPE_PASSERELLE == JDBC ? new JDBC() : new Serialization();	
 	
 	/**
 	 * Retourne l'unique instance de cette classe.

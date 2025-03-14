@@ -1,4 +1,4 @@
-package jdbc;
+package main.java.jdbc;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import personnel.*;
+import main.java.personnel.*;
 
 public class JDBC implements Passerelle 
 {

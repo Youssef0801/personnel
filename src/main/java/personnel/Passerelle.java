@@ -1,4 +1,4 @@
-package personnel;
+package main.java.personnel;
 
 public interface Passerelle 
 {

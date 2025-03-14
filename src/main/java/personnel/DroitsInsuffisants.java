@@ -1,4 +1,4 @@
-package personnel;
+package main.java.personnel;
 
 /**
  * Levée si un administrateur tente d'effectuer une opération sur une 

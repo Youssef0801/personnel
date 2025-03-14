@@ -1,12 +1,9 @@
-package testsUnitaires;
+package test.java.testsUnitaires;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import personnel.Employe;
-import personnel.GestionPersonnel;
-import personnel.Ligue;
-import personnel.SauvegardeImpossible;
+import main.java.personnel.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;

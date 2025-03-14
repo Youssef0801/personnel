@@ -1,4 +1,4 @@
-package personnel;
+package main.java.personnel;
 
 /**
  * Levée si l'on tente de supprimer le super-utilisateur.

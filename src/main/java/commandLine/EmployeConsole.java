@@ -1,11 +1,11 @@
-package commandLine;
+package main.java.commandLine;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
 
 import commandLineMenus.ListOption;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
-import personnel.Employe;
+import main.java.personnel.Employe;
 
 public class EmployeConsole 
 {

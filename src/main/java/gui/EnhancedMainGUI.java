@@ -1,6 +1,6 @@
-package gui;
+package main.java.gui;
 
-import personnel.*;
+import main.java.personnel.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;

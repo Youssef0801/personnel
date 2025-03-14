@@ -1,14 +1,14 @@
 package main.java.jdbc;
 
-public class Credentials {
-	
+public class CredentialsExample 
+{
 	private static String driver = "mysql";
 	private static String driverClassName = "com.mysql.cj.jdbc.Driver";
 	private static String host = "localhost";
 	private static String port = "3306";
-	private static String database = "gestion_ligues";
-	private static String user = "ligues_user";
-	private static String password = "Youssef123&";
+	private static String database = "";
+	private static String user = "";
+	private static String password = "";
 	
 	static String getUrl() 
 	{
@@ -29,5 +29,4 @@ public class Credentials {
 	{
 		return password;
 	}
-
 }

@@ -1,9 +1,9 @@
-package testsUnitaires;
+package test.java.testsUnitaires;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import personnel.*;
+import main.java.personnel.*;
 
 class testLigue 
 {

@@ -139,10 +139,10 @@ public class GestionPersonnel implements Serializable {
 		return root;
 	}
 
-	public Employe addRoot(String nom, String password) {
-		Employe employe = new Employe(this, null, -1, nom, "", "", password, null, null);
-		employes.add(employe);
-		return employe;
+	public Employe addRoot(String nom, String password) throws SauvegardeImpossible{
+		root = new Employe(this, null, -1, nom, "", "", password, null, null);
+		this.insert(root);
+		return root;
 	}
 
 	public void addUser(String username, String password, String email, String firstName, String lastName,

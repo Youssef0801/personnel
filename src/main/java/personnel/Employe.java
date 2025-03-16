@@ -223,4 +223,15 @@ public class Employe implements Serializable, Comparable<Employe>
 			res += ligue.toString();
 		return res + ")";
 	}
+
+	public int getId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

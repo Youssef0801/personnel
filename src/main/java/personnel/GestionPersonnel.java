@@ -142,14 +142,38 @@ public class GestionPersonnel implements Serializable {
 	int insert(Ligue ligue) throws SauvegardeImpossible {
 		return passerelle.insert(ligue);
 	}
+	int insert(Employe employe) throws SauvegardeImpossible {
+		return passerelle.insert(employe);
+	}
+	// Mise à jour avec un objet Employe
+	public void update(Employe employe) throws SauvegardeImpossible {
+	    passerelle.update(employe);
+	}
+
+	// Surcharge : Mise à jour en passant directement l’ID et les nouvelles valeurs
+	public void update(int id, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart, String role, Ligue ligue) throws SauvegardeImpossible {
+	    Employe employe = getEmployeById(id); // Assure-toi d’avoir une méthode pour récupérer un employé par ID
+	    if (employe != null) {
+	        employe.setNom(nom);
+	        employe.setPrenom(prenom);
+	        employe.setMail(mail);
+	        employe.setPassword(password);
+	        employe.setDateArrivée(dateArrivee);
+	        employe.setDateDepart(dateDepart);
+	        employe.setLigue(ligue);
+	    }
+	}
+
+	private Employe getEmployeById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	void update(Ligue ligue) throws SauvegardeImpossible
 	{
 	    passerelle.update(ligue);
 	}
 
-	int insert(Employe employe) throws SauvegardeImpossible {
-		return passerelle.insert(employe);
-	}
 
 	/**
 	 * Retourne le root (super-utilisateur).

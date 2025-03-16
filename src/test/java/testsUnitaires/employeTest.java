@@ -18,38 +18,38 @@ class employeTest {
     }
 
     @Test
-    void testSetPrenom() {
+    void testSetPrenom() throws SauvegardeImpossible {
         employe.setPrenom("Jane");
         assertEquals("Jane", employe.getPrenom());
     }
 
     @Test
-    void testSetNom() {
+    void testSetNom() throws SauvegardeImpossible {
         employe.setNom("Smith");
         assertEquals("Smith", employe.getNom());
     }
 
     @Test
-    void testSetMail() {
+    void testSetMail() throws SauvegardeImpossible {
         employe.setMail("jane@example.com");
         assertEquals("jane@example.com", employe.getMail());
     }
 
     @Test
-    void testSetPassword() {
+    void testSetPassword() throws SauvegardeImpossible {
         employe.setPassword("newpassword");
         assertTrue(employe.checkPassword("newpassword"));
     }
 
     @Test
-    void testSetDateArrivée() {
+    void testSetDateArrivée() throws SauvegardeImpossible {
         LocalDate newDate = LocalDate.of(2023, 1, 1);
         employe.setDateArrivée(newDate);
         assertEquals(newDate, employe.getDateArrivée());
     }
 
     @Test
-    void testSetDateDepart() {
+    void testSetDateDepart() throws SauvegardeImpossible {
         LocalDate newDate = LocalDate.of(2023, 1, 1);
         employe.setDateDepart(newDate);
         assertEquals(newDate, employe.getDateDepart());

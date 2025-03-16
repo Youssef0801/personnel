@@ -49,19 +49,23 @@ public class Employe implements Serializable, Comparable<Employe>
         return dateArrivee;
     }
 
-    public void setDateArrivée(LocalDate dateArrivée) {
+    public void setDateArrivée(LocalDate dateArrivée) throws SauvegardeImpossible {
         this.dateArrivee = dateArrivée;
+        gestionPersonnel.update(this);
+
     }
 
     public LocalDate getDateDepart() {
         return dateDepart;
     }
 
-    public void setDateDepart(LocalDate dateDepart) {
+    public void setDateDepart(LocalDate dateDepart) throws SauvegardeImpossible {
         if (dateDepart.isBefore(dateArrivee)) {
             throw new IllegalArgumentException("Date de départ doit être supérieure ou égale à la date d'arrivée.");
         }
         this.dateDepart = dateDepart;
+        gestionPersonnel.update(this);
+
     }
 	
 	/**
@@ -101,11 +105,14 @@ public class Employe implements Serializable, Comparable<Employe>
 	/**
 	 * Change le nom de l'employé.
 	 * @param nom le nouveau nom.
+	 * @throws SauvegardeImpossible 
 	 */
 	
-	public void setNom(String nom)
+	public void setNom(String nom) throws SauvegardeImpossible
 	{
 		this.nom = nom;
+	    gestionPersonnel.update(this);
+
 	}
 
 	/**
@@ -121,11 +128,14 @@ public class Employe implements Serializable, Comparable<Employe>
 	/**
 	 * Change le prénom de l'employé.
 	 * @param prenom le nouveau prénom de l'employé. 
+	 * @throws SauvegardeImpossible 
 	 */
 
-	public void setPrenom(String prenom)
+	public void setPrenom(String prenom) throws SauvegardeImpossible
 	{
 		this.prenom = prenom;
+	    gestionPersonnel.update(this);
+
 	}
 
 	/**
@@ -141,11 +151,14 @@ public class Employe implements Serializable, Comparable<Employe>
 	/**
 	 * Change le mail de l'employé.
 	 * @param mail le nouveau mail de l'employé.
+	 * @throws SauvegardeImpossible 
 	 */
 
-	public void setMail(String mail)
+	public void setMail(String mail) throws SauvegardeImpossible
 	{
 		this.mail = mail;
+	    gestionPersonnel.update(this);
+
 	}
 
 	/**
@@ -164,11 +177,14 @@ public class Employe implements Serializable, Comparable<Employe>
 	/**
 	 * Change le password de l'employé.
 	 * @param password le nouveau password de l'employé. 
+	 * @throws SauvegardeImpossible 
 	 */
 	
-	public void setPassword(String password)
+	public void setPassword(String password) throws SauvegardeImpossible
 	{
 		this.password= password;
+	    gestionPersonnel.update(this);
+
 	}
 
 	/**
@@ -232,6 +248,11 @@ public class Employe implements Serializable, Comparable<Employe>
 	public String getPassword() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setLigue(Ligue ligue2) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

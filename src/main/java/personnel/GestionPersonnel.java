@@ -123,6 +123,17 @@ public class GestionPersonnel implements Serializable {
 	public void updateLigue(Ligue ligue) throws SauvegardeImpossible {
 	    passerelle.update(ligue);
 	}
+	// Surcharge : Mise à jour en passant directement l’ID et le nom
+	public void update(int id, String nom) throws SauvegardeImpossible {
+	    Ligue ligue = getLigueById(id); // Ajoute une méthode pour retrouver une ligue par ID
+	    if (ligue != null) {
+	        ligue.setNom(nom);
+	    }
+	}
+	private Ligue getLigueById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	void remove(Ligue ligue) {
 		ligues.remove(ligue);

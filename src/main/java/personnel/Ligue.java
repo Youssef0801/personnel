@@ -59,11 +59,11 @@ public class Ligue implements Serializable, Comparable<Ligue>
      * @param nom le nouveau nom de la ligue.
      * @throws SauvegardeImpossible 
      */
-    public void setNom(String nom) throws SauvegardeImpossible
-    {
+    public void setNom(String nom) throws SauvegardeImpossible {
         this.nom = nom;
-        GestionPersonnel.getGestionPersonnel().update(this);
+        gestionPersonnel.update(this);  // Utilise la variable d'instance au lieu de l'appel statique
     }
+
 
     /**
      * Retourne l'administrateur de la ligue.
@@ -88,7 +88,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
         if (administrateur != root && administrateur.getLigue() != this)
             throw new DroitsInsuffisants();
         this.administrateur = administrateur;
-        GestionPersonnel.getGestionPersonnel().update(this);
+        gestionPersonnel.update(this); 
     }
 
     /**
@@ -132,7 +132,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
     public void remove() throws SauvegardeImpossible
     {
         gestionPersonnel.remove(this);
-        GestionPersonnel.getGestionPersonnel().update(this);
+        gestionPersonnel.update(this); 
 
     }
 

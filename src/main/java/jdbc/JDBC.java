@@ -16,7 +16,7 @@ public class JDBC implements Passerelle {
 	public JDBC() {
 		try {
 			Class.forName(Credentials.getDriverClassName());
-			connection = DriverManager.getConnection(Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
+			this.connection = DriverManager.getConnection(Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
 		} catch (ClassNotFoundException e) {
 			System.out.println("Pilote JDBC non installé.");
 		} catch (SQLException e) {
@@ -68,71 +68,70 @@ public class JDBC implements Passerelle {
 		close();
 	}
 
-	public void close() throws SauvegardeImpossible {
-		try {
-			if (connection != null)
-				connection.close();
-		} catch (SQLException e) {
-			throw new SauvegardeImpossible(e);
-		}
-	}
-
+	
 	@Override
-	public int insert(Ligue ligue) throws SauvegardeImpossible {
-		String sql = "INSERT INTO Ligue (nom) VALUES (?)";
-		try (Connection connection = DriverManager.getConnection(
-				Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
-				PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    public int insert(Ligue ligue) throws SauvegardeImpossible {
+        String sql = "INSERT INTO Ligue (nom) VALUES (?)";
+        try (PreparedStatement statement = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-			statement.setString(1, ligue.getNom());
-			statement.executeUpdate();
+            statement.setString(1, ligue.getNom());
+            statement.executeUpdate();
 
-			ResultSet rs = statement.getGeneratedKeys();
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			throw new SauvegardeImpossible(e);
-		}
-		return -1;
-	}
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new SauvegardeImpossible(e);
+        }
+        return -1;
+    }
 
-	@Override
-	public void update(Ligue ligue) throws SauvegardeImpossible {
-	    if (ligue.getId() == 0) {
-	        throw new SauvegardeImpossible("Impossible de mettre à jour une ligue sans ID.");
-	    }
+    @Override
+    public void update(Ligue ligue) throws SauvegardeImpossible {
+        if (ligue.getId() == 0) {
+            throw new SauvegardeImpossible("❌ Impossible de mettre à jour une ligue sans ID.");
+        }
 
-	    String sql = "UPDATE Ligue SET nom = ? WHERE id = ?";
-	    try (Connection connection = DriverManager.getConnection(
-	            Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
-	         PreparedStatement statement = connection.prepareStatement(sql)) {
+        String sql = "UPDATE Ligue SET nom = ? WHERE id = ?";
+        try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
 
-	        statement.setString(1, ligue.getNom());
-	        statement.setInt(2, ligue.getId());
+            statement.setString(1, ligue.getNom());
+            statement.setInt(2, ligue.getId());
 
-	        int rowsUpdated = statement.executeUpdate();
-	        if (rowsUpdated == 0) {
-	            throw new SauvegardeImpossible("Aucune ligue trouvée avec cet ID.");
-	        }
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new SauvegardeImpossible("❌ Aucune ligue trouvée avec cet ID.");
+            }
 
-	    } catch (SQLException e) {
-	        throw new SauvegardeImpossible(e);
-	    }
-	}
+        } catch (SQLException e) {
+            throw new SauvegardeImpossible(e);
+        }
+    }
 
-	public int insert(Employe employe) {
-		String sql = "INSERT INTO Employe (nom) VALUES (?)";
-		try (PreparedStatement instruction = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-			instruction.setString(1, employe.getNom());
-			instruction.executeUpdate();
-			ResultSet id = instruction.getGeneratedKeys();
-			if (id.next()) {
-				return id.getInt(1);
-			}
-		} catch (SQLException exception) {
-			exception.printStackTrace();
-		}
-		return -1;
-	}
+    public int insert(Employe employe) {
+        String sql = "INSERT INTO Employe (nom) VALUES (?)";
+        try (PreparedStatement instruction = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            instruction.setString(1, employe.getNom());
+            instruction.executeUpdate();
+            ResultSet id = instruction.getGeneratedKeys();
+            if (id.next()) {
+                return id.getInt(1);
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void close() {
+        try {
+            if (this.connection != null) {
+                this.connection.close();
+                System.out.println("✅ Connexion MySQL fermée.");
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Erreur lors de la fermeture de la connexion : " + e.getMessage());
+        }
+    }
 }

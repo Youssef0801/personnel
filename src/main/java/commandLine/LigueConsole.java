@@ -82,7 +82,12 @@ public class LigueConsole
 	private Option changerNom(final Ligue ligue)
 	{
 		return new Option("Renommer", "r", 
-				() -> {ligue.setNom(getString("Nouveau nom : "));});
+				() -> {try {
+					ligue.setNom(getString("Nouveau nom : "));
+				} catch (SauvegardeImpossible e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}});
 	}
 
 	private List<Ligue> selectionnerLigue()
@@ -188,7 +193,12 @@ public class LigueConsole
 			() -> {
 				java.util.List<Employe> employesList = new ArrayList<>(ligue.getEmployes());
 				Employe employe = employesList.get(Integer.parseInt(getString("Entrez l'index de l'employé à désigner administrateur : ")) - 1);
-				ligue.setAdministrateur(employe);
+				try {
+					ligue.setAdministrateur(employe);
+				} catch (SauvegardeImpossible e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				System.out.println(employe.getNom() + " " + employe.getPrenom() + " est maintenant l'administrateur de la ligue " + ligue.getNom());
 			});
 	}
@@ -196,7 +206,12 @@ public class LigueConsole
 
 	private Option supprimer(Ligue ligue)
 	{
-		return new Option("Supprimer", "d", () -> {ligue.remove();});
+		return new Option("Supprimer", "d", () -> {try {
+			ligue.remove();
+		} catch (SauvegardeImpossible e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}});
 	}
 	
 }

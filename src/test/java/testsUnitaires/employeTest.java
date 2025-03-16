@@ -13,7 +13,7 @@ class employeTest {
     private Employe employe;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SauvegardeImpossible {
         employe = new Employe(null, null, "Doe", "John", "john@example.com", "password", LocalDate.of(2022, 1, 1), LocalDate.of(2023, 1, 1));
     }
 
@@ -61,7 +61,7 @@ class employeTest {
     }
 
     @Test
-    void testRemoveEmploye() {
+    void testRemoveEmploye() throws SauvegardeImpossible {
         GestionPersonnel gestionPersonnel = GestionPersonnel.getGestionPersonnel();
         Ligue ligue = createTestLigue(gestionPersonnel);
         Employe employe1 = ligue.addEmploye("Doe", "John", "john@example.com", "password", LocalDate.now(), null);
@@ -73,7 +73,7 @@ class employeTest {
     }
 
     @Test
-    void testChangeAdministrateur() {
+    void testChangeAdministrateur() throws SauvegardeImpossible {
         GestionPersonnel gestionPersonnel = GestionPersonnel.getGestionPersonnel();
         Ligue ligue = createTestLigue(gestionPersonnel);
         Employe employe1 = ligue.addEmploye("Doe", "John", "john@example.com", "password", LocalDate.now(), null);

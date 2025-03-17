@@ -103,7 +103,7 @@ public class GestionPersonnel implements Serializable {
 		}
 
 		// Vérifier l'ajout en affichant toutes les ligues
-		System.out.println("📌 Ligues après ajout :");
+		System.out.println(" Ligues après ajout :");
 		for (Ligue ligue : gestion.getLigues()) {
 			System.out.println("- " + ligue.getNom());
 		}

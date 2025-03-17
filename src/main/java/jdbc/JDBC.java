@@ -26,42 +26,88 @@ public class JDBC implements Passerelle {
 
 	@Override
 	public GestionPersonnel getGestionPersonnel() {
-		GestionPersonnel gestionPersonnel = new GestionPersonnel();
-		try (Connection connection = DriverManager.getConnection(
-				Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
-				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM Ligue")) {
+	    GestionPersonnel gestionPersonnel = new GestionPersonnel();
+	    try (Connection connection = DriverManager.getConnection(
+	            Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
+	         Statement statement = connection.createStatement();
+	         ResultSet resultSet = statement.executeQuery("SELECT e.id AS employe_id, e.nom AS employe_nom, e.prenom, e.mail, e.password, e.dateArrivee, e.dateDepart, e.role, e.ligue_id, " +
+	                 "l.id AS ligue_id, l.nom AS ligue_nom " +
+	                 "FROM Employe e " +
+	                 "JOIN Ligue l ON e.ligue_id = l.id")) {
 
-			while (resultSet.next()) {
-				int id = resultSet.getInt("id");
-				String nom = resultSet.getString("nom");
-				gestionPersonnel.addLigue(id, nom);
-			}
+	    	
+	        while (resultSet.next()) {
+	            int id = resultSet.getInt("id");
+	            String nom = resultSet.getString("nom");
+	            Ligue ligue = gestionPersonnel.addLigue(id, nom);
 
-			// Lire les informations du root depuis la base de données
-			try (ResultSet rootLecturePoto = statement.executeQuery("SELECT * FROM Employe WHERE role = 'root'")) {
-				if (rootLecturePoto.next()) {
-					int rootId = rootLecturePoto.getInt("id");
-					String rootNom = rootLecturePoto.getString("nom");
-					String rootPrenom = rootLecturePoto.getString("prenom");
-					String rootMail = rootLecturePoto.getString("mail");
-					String rootPassword = rootLecturePoto.getString("password");
+	            // Charger les employés de cette ligue
+	            String requeteEmploye = "SELECT * FROM Employe WHERE ligue_id = ?";
+	            try (PreparedStatement statementEmploye = connection.prepareStatement(requeteEmploye)) {
+	                statementEmploye.setInt(1, id);
+	                ResultSet employes = statementEmploye.executeQuery();
 
-					// Vérification pour éviter NullPointerException sur toLocalDate()
-					LocalDate rootDateArrivee = rootLecturePoto.getDate("dateArrivee") != null 
-							? rootLecturePoto.getDate("dateArrivee").toLocalDate() : null;
-					LocalDate rootDateDepart = rootLecturePoto.getDate("dateDepart") != null 
-							? rootLecturePoto.getDate("dateDepart").toLocalDate() : null;
+	                while (employes.next()) {
+	                    int employeId = employes.getInt("id");
+	                    String employeNom = employes.getString("nom");
+	                    String employePrenom = employes.getString("prenom");
+	                    String employeMail = employes.getString("mail");
+	                    String employePassword = employes.getString("password");
 
-					gestionPersonnel.addRoot(rootId, rootNom, rootPrenom, rootMail, rootPassword, rootDateArrivee, rootDateDepart);
+	                    LocalDate dateArrivee = employes.getDate("dateArrivee") != null
+	                            ? employes.getDate("dateArrivee").toLocalDate() : null;
+	                    LocalDate dateDepart = employes.getDate("dateDepart") != null
+	                            ? employes.getDate("dateDepart").toLocalDate() : null;
+
+	                    String role = employes.getString("role");
+
+	                    
+	                    // Ajouter l'employé à la ligue
+	                    Employe employe = null;
+						try {
+							employe = ligue.addEmploye(employeNom, employePrenom, employeMail, employePassword, dateArrivee, dateDepart);
+						} catch (SauvegardeImpossible e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	                    employe.setId(employeId);
+	                    
+
+	                    // Définir l'administrateur si c'est un admin
+	                    if (role.equals("admin")) {
+	                        ligue.setAdministrateur(employe);
+	                    }
+	                }
+	            } catch (SauvegardeImpossible e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			}
+	        }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return gestionPersonnel;
+	        // Charger le root
+	        try (ResultSet rootLecturePoto = statement.executeQuery("SELECT * FROM Employe WHERE role = 'root'")) {
+	            if (rootLecturePoto.next()) {
+	                int rootId = rootLecturePoto.getInt("id");
+	                String rootNom = rootLecturePoto.getString("nom");
+	                String rootPrenom = rootLecturePoto.getString("prenom");
+	                String rootMail = rootLecturePoto.getString("mail");
+	                String rootPassword = rootLecturePoto.getString("password");
+
+	                LocalDate rootDateArrivee = rootLecturePoto.getDate("dateArrivee") != null 
+	                        ? rootLecturePoto.getDate("dateArrivee").toLocalDate() : null;
+	                LocalDate rootDateDepart = rootLecturePoto.getDate("dateDepart") != null 
+	                        ? rootLecturePoto.getDate("dateDepart").toLocalDate() : null;
+
+	                gestionPersonnel.addRoot(rootId, rootNom, rootPrenom, rootMail, rootPassword, rootDateArrivee, rootDateDepart);
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return gestionPersonnel;
 	}
+
 
 	@Override
 	public void sauvegarderGestionPersonnel(GestionPersonnel gestionPersonnel) throws SauvegardeImpossible {

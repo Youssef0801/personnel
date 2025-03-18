@@ -58,6 +58,9 @@ public class GestionPersonnel implements Serializable {
 		ligues = new TreeSet<>();
 		gestionPersonnel = this;
 	}
+	public int insertEmployeWithLigueName(Employe employe, String nomLigue) throws SauvegardeImpossible {
+	    return passerelle.insertEmployeWithLigueName(employe, nomLigue);
+	}
 
 	public void sauvegarder() throws SauvegardeImpossible {
 		passerelle.sauvegarderGestionPersonnel(this);

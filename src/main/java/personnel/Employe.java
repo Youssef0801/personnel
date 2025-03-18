@@ -47,6 +47,7 @@ public class Employe implements Serializable, Comparable<Employe>
 
     public Employe(GestionPersonnel gestionPersonnel2, int int1, String string, String string2, String string3,
 			String string4, LocalDate localDate, LocalDate localDate2, Ligue ligue2) {
+    	
 		// TODO Auto-generated constructor stub
 	}
  // Getters and setters for dateArrivée and dateDepart

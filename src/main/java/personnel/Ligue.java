@@ -134,6 +134,9 @@ public class Ligue implements Serializable, Comparable<Ligue>
         gestionPersonnel.update(this); 
 
     }
+    public void removeAndMoveEmployesTo(Ligue ligueDestination) throws SauvegardeImpossible {
+        gestionPersonnel.deleteLigueAndMoveEmployes(this, ligueDestination);
+    }
 
     @Override
     public int compareTo(Ligue autre)

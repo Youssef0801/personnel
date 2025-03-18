@@ -69,6 +69,18 @@ public class GestionPersonnel implements Serializable {
 	    passerelle.delete(employe);
 	    employe.getLigue().remove(employe); // Retirer l'employé de sa ligue en mémoire
 	}
+	public void deleteLigueAndMoveEmployes(Ligue ligueASupprimer, Ligue ligueDestination) throws SauvegardeImpossible {
+	    passerelle.deleteLigueAndMoveEmployes(ligueASupprimer, ligueDestination);
+	    
+	    // Déplacer employés en mémoire
+	    for (Employe employe : ligueASupprimer.getEmployes()) {
+	        ligueDestination.getEmployes().add(employe);
+	        employe.setLigue(ligueDestination);
+	    }
+
+	    // Supprimer ligue en mémoire
+	    ligues.remove(ligueASupprimer);
+	}
 
 	/**
 	 * Retourne la ligue dont administrateur est l'administrateur,

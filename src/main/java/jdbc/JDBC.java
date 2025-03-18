@@ -295,6 +295,42 @@ public class JDBC implements Passerelle {
 	      }
 	  }
 	  @Override
+	  public void deleteLigueAndMoveEmployes(Ligue ligueASupprimer, Ligue ligueDestination) throws SauvegardeImpossible {
+	      try {
+	          connection.setAutoCommit(false); // Transaction SQL
+
+	          // 1. Déplacer les employés vers une autre ligue
+	          PreparedStatement updateEmployes = connection.prepareStatement(
+	              "UPDATE Employe SET ligue_id = ? WHERE ligue_id = ?");
+	          updateEmployes.setInt(1, ligueDestination.getId());
+	          updateEmployes.setInt(2, ligueASupprimer.getId());
+	          updateEmployes.executeUpdate();
+
+	          // 2. Supprimer ensuite la ligue vide
+	          PreparedStatement deleteLigue = connection.prepareStatement(
+	              "DELETE FROM Ligue WHERE id = ?");
+	          deleteLigue.setInt(1, ligueASupprimer.getId());
+	          deleteLigue.executeUpdate();
+
+	          connection.commit(); // Confirme les opérations
+
+	      } catch (SQLException e) {
+	          try {
+	              connection.rollback(); // Annuler les opérations en cas d'erreur
+	          } catch (SQLException ex) {
+	              ex.printStackTrace();
+	          }
+	          throw new SauvegardeImpossible(e);
+	      } finally {
+	          try {
+	              connection.setAutoCommit(true);
+	          } catch (SQLException ex) {
+	              ex.printStackTrace();
+	          }
+	      }
+	  }
+
+	  @Override
 	  public void delete(Employe employe) throws SauvegardeImpossible {
 	      String sql = "DELETE FROM Employe WHERE id = ?";
 	      try (PreparedStatement statement = connection.prepareStatement(sql)) {

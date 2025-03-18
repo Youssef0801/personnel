@@ -39,7 +39,10 @@ public class JDBC implements Passerelle {
 	        while (resultSet.next()) {
 	            int id = resultSet.getInt("id");
 	            String nom = resultSet.getString("nom");
-	            Ligue ligue = gestionPersonnel.addLigue(id, nom);
+	            if (id <= 0) { // Vérifie que l'ID est valide
+	    	        throw new SQLException("Erreur : Une ligue sans ID a été trouvée ");
+	    	    }
+	            gestionPersonnel.addLigue(id, nom); // Charge bien l’ID depuis la base
 
 	            // Charger les employés de cette ligue
 	            String requeteEmploye = "SELECT * FROM Employe WHERE ligue_id = ?";
@@ -64,6 +67,7 @@ public class JDBC implements Passerelle {
 	                    
 	                    // Ajouter l'employé à la ligue
 	                    Employe employe = null;
+						Ligue ligue = null;
 						try {
 							employe = ligue.addEmploye(employeNom, employePrenom, employeMail, employePassword, dateArrivee, dateDepart);
 						} catch (SauvegardeImpossible e) {
@@ -125,12 +129,15 @@ public class JDBC implements Passerelle {
 
             ResultSet rs = statement.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1);
+            	int id = rs.getInt(1); // Récupère l’ID généré
+                ligue.setId(id); // Affecte l’ID à l’objet
+                return id;
+            } else {
+                throw new SauvegardeImpossible("Erreur : Impossible de récupérer l'ID de la ligue après insertion.");
             }
         } catch (SQLException e) {
             throw new SauvegardeImpossible(e);
         }
-        return -1;
     }
 	  public int insert(Employe employe) {
 	        String sql = "INSERT INTO Employe (nom) VALUES (?)";

@@ -25,7 +25,6 @@ public class Ligue implements Serializable, Comparable<Ligue>
     private SortedSet<Employe> employes;
     private Employe administrateur;
     private GestionPersonnel gestionPersonnel;
-
     /**
      * Crée une ligue.
      * @param nom le nom de la ligue.
@@ -151,5 +150,13 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	public int getId() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	public void setId(int id) throws SauvegardeImpossible {
+		  this.id = id;
+	        gestionPersonnel.update(this); 
+		
+		// TODO Auto-generated method stub
+		
 	}
 }

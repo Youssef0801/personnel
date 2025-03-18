@@ -255,14 +255,14 @@ public class Employe implements Serializable, Comparable<Employe>
 		return null;
 	}
 
-	public void setLigue(Ligue ligue2) {
+	public void setLigue(Ligue ligue) throws SauvegardeImpossible {
 		
 		this.ligue= ligue;
 		gestionPersonnel.update(this);
 		
 	}
 
-	public void setId(int employeId) {
+	public void setId(int employeId) throws SauvegardeImpossible {
 		
 		this.id= id;
 	    gestionPersonnel.update(this);

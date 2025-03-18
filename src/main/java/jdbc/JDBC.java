@@ -117,7 +117,12 @@ public class JDBC implements Passerelle {
 	                        LocalDate dateDepart = resultSetEmployes.getDate("dateDepart") != null
 	                                ? resultSetEmployes.getDate("dateDepart").toLocalDate()
 	                                : null;
+	                        
+	                        // Instancier un objet Employe avec la surcharge du constructeur
+	                        Employe employe = new Employe(gestionPersonnel, ligue, idEmploye, nomEmploye, prenomEmploye, mailEmploye, passwordEmploye, dateArrivee, dateDepart);
 
+	                        // Ajouter l’employé à la ligue correspondante
+	                        ligue.getEmployes().add(employe);
 	                        }
 	                }
 	            }
@@ -148,6 +153,38 @@ public class JDBC implements Passerelle {
 	    return gestionPersonnel;
 	}
 
+	public int insertEmployeWithLigueName(Employe employe, String nomLigue) throws SauvegardeImpossible {
+	    String sql = "INSERT INTO Employe (nom, prenom, mail, password, dateArrivee, dateDepart, ligue_id) " +
+	                 "SELECT ?, ?, ?, ?, ?, ?, ligue.id " +
+	                 "FROM Ligue ligue WHERE ligue.nom = ?";
+
+	    try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+	        statement.setString(1, employe.getNom());
+	        statement.setString(2, employe.getPrenom());
+	        statement.setString(3, employe.getMail());
+	        statement.setString(4, employe.getPassword());
+	        statement.setDate(5, employe.getDateArrivée() != null ? java.sql.Date.valueOf(employe.getDateArrivée()) : null);
+	        statement.setDate(6, employe.getDateDepart() != null ? java.sql.Date.valueOf(employe.getDateDepart()) : null);
+	        statement.setString(7, nomLigue); // Nom de la ligue pour la jointure
+
+	        int affectedRows = statement.executeUpdate();
+	        if (affectedRows == 0) {
+	            throw new SauvegardeImpossible("L'insertion a échoué, aucune ligne modifiée (ligue non trouvée ).");
+	        }
+
+	        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	                int id = generatedKeys.getInt(1);
+	                employe.setId(id);
+	                return id;
+	            } else {
+	                throw new SauvegardeImpossible("L'insertion a réussi, mais aucun ID n'a été retourné.");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        throw new SauvegardeImpossible(e);
+	    }
+	}
 
 	@Override
 	public void sauvegarderGestionPersonnel(GestionPersonnel gestionPersonnel) throws SauvegardeImpossible {

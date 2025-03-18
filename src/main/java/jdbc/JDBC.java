@@ -294,7 +294,21 @@ public class JDBC implements Passerelle {
 	          throw new SauvegardeImpossible(e);
 	      }
 	  }
-  
+	  @Override
+	  public void delete(Employe employe) throws SauvegardeImpossible {
+	      String sql = "DELETE FROM Employe WHERE id = ?";
+	      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+	          statement.setInt(1, employe.getId());
+
+	          int rowsDeleted = statement.executeUpdate();
+	          if (rowsDeleted == 0) {
+	              throw new SauvegardeImpossible("Aucun employé trouvé avec l'ID : " + employe.getId());
+	          }
+	      } catch (SQLException e) {
+	          throw new SauvegardeImpossible(e);
+	      }
+	  }
+
     public void close() {
         try {
             if (this.connection != null) {

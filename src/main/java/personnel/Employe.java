@@ -269,5 +269,8 @@ public class Employe implements Serializable, Comparable<Employe>
 	    gestionPersonnel.update(this);
 
 	}
+	public void remove1() throws SauvegardeImpossible {
+	    gestionPersonnel.delete(this);
+	}
 
 }

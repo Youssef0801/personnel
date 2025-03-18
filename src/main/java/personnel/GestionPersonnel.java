@@ -65,6 +65,10 @@ public class GestionPersonnel implements Serializable {
 	public void sauvegarder() throws SauvegardeImpossible {
 		passerelle.sauvegarderGestionPersonnel(this);
 	}
+	public void delete(Employe employe) throws SauvegardeImpossible {
+	    passerelle.delete(employe);
+	    employe.getLigue().remove(employe); // Retirer l'employé de sa ligue en mémoire
+	}
 
 	/**
 	 * Retourne la ligue dont administrateur est l'administrateur,

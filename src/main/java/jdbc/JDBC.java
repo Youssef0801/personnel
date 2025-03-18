@@ -87,7 +87,43 @@ public class JDBC implements Passerelle {
 					e.printStackTrace();
 				}
 	        }
+	        try {
+	            String requeteLigues = "SELECT * FROM Ligue";
+	            ResultSet resultSetLigues = statement.executeQuery(requeteLigues);
 
+	            while (resultSetLigues.next()) {
+	                int idLigue = resultSetLigues.getInt("id");
+	                String nomLigue = resultSetLigues.getString("nom");
+
+	                Ligue ligue = gestionPersonnel.addLigue(idLigue, nomLigue);
+
+	                // Nouvelle requête pour récupérer les employés de cette ligue
+	                String requeteEmployes = "SELECT * FROM Employe WHERE ligue_id = ?";
+	                try (PreparedStatement statementEmployes = connection.prepareStatement(requeteEmployes)) {
+	                    statementEmployes.setInt(1, idLigue);
+	                    ResultSet resultSetEmployes = statementEmployes.executeQuery();
+
+	                    while (resultSetEmployes.next()) {
+	                        int idEmploye = resultSetEmployes.getInt("id");
+	                        String nomEmploye = resultSetEmployes.getString("nom");
+	                        String prenomEmploye = resultSetEmployes.getString("prenom");
+	                        String mailEmploye = resultSetEmployes.getString("mail");
+	                        String passwordEmploye = resultSetEmployes.getString("password");
+
+	                        // Vérifier la gestion des dates pour éviter NullPointerException
+	                        LocalDate dateArrivee = resultSetEmployes.getDate("dateArrivee") != null
+	                                ? resultSetEmployes.getDate("dateArrivee").toLocalDate()
+	                                : null;
+	                        LocalDate dateDepart = resultSetEmployes.getDate("dateDepart") != null
+	                                ? resultSetEmployes.getDate("dateDepart").toLocalDate()
+	                                : null;
+
+	                        }
+	                }
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 	        // Charger le root
 	        try (ResultSet rootLecturePoto = statement.executeQuery("SELECT * FROM Employe WHERE role = 'root'")) {
 	            if (rootLecturePoto.next()) {

@@ -222,5 +222,16 @@ public class GestionPersonnel implements Serializable {
 		// TODO Auto-generated method stub
 		
 	}
+	private Employe findEmployeById(int employeId, GestionPersonnel gestionPersonnel) {
+	    for (Ligue ligue : gestionPersonnel.getLigues()) {
+	        for (Employe employe : ligue.getEmployes()) {
+	            if (employe.getId() == employeId) {
+	                return employe;
+	            }
+	        }
+	    }
+	    return null;
+	}
+
 
 }

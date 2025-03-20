@@ -88,14 +88,28 @@ public class JDBC implements Passerelle {
 				}
 	        }
 	        try {
-	            String requeteLigues = "SELECT * FROM Ligue";
+	            String requeteLigues = "SELECT id, nom, administrateur FROM Ligue";
 	            ResultSet resultSetLigues = statement.executeQuery(requeteLigues);
 
 	            while (resultSetLigues.next()) {
 	                int idLigue = resultSetLigues.getInt("id");
 	                String nomLigue = resultSetLigues.getString("nom");
+	                int idAdmin = resultSetLigues.getInt("administrateur");
+
 
 	                Ligue ligue = gestionPersonnel.addLigue(idLigue, nomLigue);
+	                
+	                if (idAdmin > 0) {
+	                    Employe admin = findEmployeById(idAdmin, gestionPersonnel);
+	                    if (admin != null) {
+	                        try {
+								ligue.setAdministrateur(admin);
+							} catch (SauvegardeImpossible e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+	                    }
+	                }
 
 	                // Nouvelle requête pour récupérer les employés de cette ligue
 	                String requeteEmployes = "SELECT * FROM Employe WHERE ligue_id = ?";
@@ -151,6 +165,11 @@ public class JDBC implements Passerelle {
 	        e.printStackTrace();
 	    }
 	    return gestionPersonnel;
+	}
+
+	private Employe findEmployeById(int idAdmin, GestionPersonnel gestionPersonnel) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public int insertEmployeWithLigueName(Employe employe, String nomLigue) throws SauvegardeImpossible {
@@ -250,6 +269,7 @@ public class JDBC implements Passerelle {
             throw new SauvegardeImpossible(e);
         }
     }
+    
 	  public void update(Employe employe) throws SauvegardeImpossible {
 	      if (employe.getId() == 0) {
 	          throw new SauvegardeImpossible("❌ Impossible de mettre à jour un employé sans ID.");

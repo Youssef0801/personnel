@@ -1,33 +1,24 @@
-package main.java.jdbc;
+package jdbc;
 
 public class Credentials {
-	
-	private static String driver = "mysql";
-	private static String driverClassName = "com.mysql.cj.jdbc.Driver";
-	private static String host = "localhost";
-	private static String port = "3306";
-	private static String database = "gestion_ligues";
-	private static String user = "ligues_user";
-	private static String password = "Youssef123&";
-	
-	static String getUrl() 
-	{
-		return "jdbc:" + driver + "://" + host + ":" + port + "/" + database ;
-	}
-	
-	static String getDriverClassName()
-	{
-		return driverClassName;
-	}
-	
-	static String getUser() 
-	{
-		return user;
-	}
+    private static final String DRIVER_CLASS_NAME = "";
+    private static final String URL = "";
+    private static final String USER = "";
+    private static final String PASSWORD = "";
 
-	static String getPassword() 
-	{
-		return password;
-	}
+    public static String getDriverClassName() {
+        return DRIVER_CLASS_NAME;
+    }
 
+    public static String getUrl() {
+        return URL;
+    }
+
+    public static String getUser() {
+        return USER;
+    }
+
+    public static String getPassword() {
+        return PASSWORD;
+    }
 }

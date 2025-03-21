@@ -88,7 +88,8 @@ public class Ligue implements Serializable, Comparable<Ligue>
             throw new DroitsInsuffisants();
         }
         this.administrateur = administrateur;
-        gestionPersonnel.update(this);
+        gestionPersonnel.changerAdministrateur(this, administrateur);
+
     }
 
     /**

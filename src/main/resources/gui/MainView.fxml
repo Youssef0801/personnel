@@ -6,11 +6,11 @@
     <top>
         <MenuBar>
             <Menu text="File">
-                <MenuItem text="Exit" onAction="#handleExit"/>
+                <MenuItem text="Tu veux t'en aller ?" onAction="#handleExit"/>
             </Menu>
         </MenuBar>
     </top>
     <center>
-        <Label text="Welcome to Gestion des Ligues!" />
+        <Label text="Bienvenu dans la Gestion des Ligues mon rhooo!" />
     </center>
 </BorderPane>

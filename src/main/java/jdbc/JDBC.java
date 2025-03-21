@@ -1,6 +1,7 @@
 package main.java.jdbc;
 
 import java.sql.DriverManager;
+import java.sql.Types;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -314,6 +315,27 @@ public class JDBC implements Passerelle {
 	          throw new SauvegardeImpossible(e);
 	      }
 	  }
+	  @Override
+	  public void changerAdministrateur(Ligue ligue, Employe administrateur) throws SauvegardeImpossible {
+	      String sql = "UPDATE Ligue SET administrateur = ? WHERE id = ?";
+
+	      try (PreparedStatement instruction = this.connection.prepareStatement(sql)) {
+	          if (administrateur != null)
+	              instruction.setInt(1, administrateur.getId());
+	          else
+	              instruction.setNull(1, Types.INTEGER);
+
+	          instruction.setInt(2, ligue.getId());
+
+	          int updatedRows = instruction.executeUpdate();
+	          if (updatedRows == 0) {
+	              throw new SauvegardeImpossible("Ligue introuvable avec l'id : " + ligue.getId());
+	          }
+	      } catch (SQLException e) {
+	          throw new SauvegardeImpossible(e);
+	      }
+	  }
+
 	  @Override
 	  public void deleteLigueAndMoveEmployes(Ligue ligueASupprimer, Ligue ligueDestination) throws SauvegardeImpossible {
 	      try {

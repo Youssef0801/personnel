@@ -11,6 +11,7 @@ public interface Passerelle
 	public int insertEmployeWithLigueName(Employe employe, String nomLigue) throws SauvegardeImpossible;
 	public void delete(Employe employe) throws SauvegardeImpossible;
 	void deleteLigueAndMoveEmployes(Ligue ligueASupprimer, Ligue ligueDestination) throws SauvegardeImpossible;
+	void changerAdministrateur(Ligue ligue, Employe administrateur) throws SauvegardeImpossible;
 
 
 

@@ -199,6 +199,9 @@ public class GestionPersonnel implements Serializable {
 	 * 
 	 * @return le root.
 	 */
+	public void changerAdministrateur(Ligue ligue, Employe nouvelAdmin) throws SauvegardeImpossible {
+	    passerelle.changerAdministrateur(ligue, nouvelAdmin);
+	}
 
 	public Employe getRoot() {
 		return root;

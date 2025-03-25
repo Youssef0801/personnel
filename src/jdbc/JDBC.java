@@ -176,11 +176,16 @@ public class JDBC implements Passerelle
 	public void update(Ligue ligue) throws SauvegardeImpossible {
 	    try {
 	        PreparedStatement instruction = connection.prepareStatement(
-	            "UPDATE ligue SET nom = ? WHERE id = ?"
+	            "UPDATE ligue SET nom = ?, id_administrateur = ? WHERE id = ?"
 	        );
 	        instruction.setString(1, ligue.getNom()); // Met à jour le nom de la ligue
-	        instruction.setInt(2, ligue.getId());     // Identifie la ligue par son ID
-	        instruction.executeUpdate();             // Exécute la requête de mise à jour
+	        if (ligue.getAdministrateur() != null) {
+	            instruction.setInt(2, ligue.getAdministrateur().getId()); // Met à jour l'ID de l'administrateur
+	        } else {
+	            instruction.setNull(2, java.sql.Types.INTEGER); // Définit l'administrateur comme null si aucun n'est défini
+	        }
+	        instruction.setInt(3, ligue.getId()); // Identifie la ligue par son ID
+	        instruction.executeUpdate(); // Exécute la requête de mise à jour
 	    } catch (SQLException exception) {
 	        exception.printStackTrace();
 	        throw new SauvegardeImpossible(exception); // Lance une exception en cas d'erreur

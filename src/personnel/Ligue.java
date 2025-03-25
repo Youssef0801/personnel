@@ -94,7 +94,7 @@ public class Ligue implements Serializable, Comparable<Ligue>
 	    }
 	    this.administrateur = administrateur;
 	    try {
-	        gestionPersonnel.update(this); // Met à jour la ligue dans la base de données
+	        gestionPersonnel.getPasserelle().update(this); // Met à jour la ligue dans la base de données
 	    } catch (SauvegardeImpossible e) {
 	        e.printStackTrace(); // Gère l'exception en cas d'échec de la sauvegarde
 	    }

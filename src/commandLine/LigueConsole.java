@@ -127,7 +127,7 @@ public class LigueConsole
                 );
     }
     
-    private List<Employe> changeAdministrator(final Ligue league)
+    private List<Employe> modifyAdministrator(final Ligue league)
     {
         return null;
     }		
@@ -145,4 +145,17 @@ public class LigueConsole
         return new Option("Delete", "d", () -> {league.remove();});
     }
     
+    private Option changeAdministrator(final Ligue league)
+    {
+        return new Option("Change administrator", "a", () -> {
+            new List<Employe>("Select a new administrator", "s",
+                () -> new ArrayList<>(league.getEmployes()),
+                (employe) -> {
+                    league.setAdministrator(employe);
+                    return new Option("Administrator changed successfully", "c", () -> {});
+                }
+            ).start();
+            System.out.println("Administrator changed successfully.");
+        });
+    }
 }

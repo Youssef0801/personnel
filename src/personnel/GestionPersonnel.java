@@ -130,6 +130,11 @@ public class GestionPersonnel implements Serializable
         gateway.update(league);
     }
 
+    public void update(Employe employee) throws SauvegardeImpossible
+    {
+        gateway.update(employee);
+    }
+
     /**
      * Returns the root (super-user).
      * @return the root.

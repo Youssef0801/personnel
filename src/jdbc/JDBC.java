@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import personnel.*;
 
@@ -33,20 +34,45 @@ public class JDBC implements Passerelle
     @Override
     public GestionPersonnel getGestionPersonnel() 
     {
-        GestionPersonnel GestionPersonnel = new GestionPersonnel();
+        GestionPersonnel gestionPersonnel = new GestionPersonnel();
         try 
         {
-            String query = "select * from ligue";
-            Statement statement = connection.createStatement();
-            ResultSet leagues = statement.executeQuery(query);
+            String queryLigue = "SELECT * FROM ligue";
+            Statement statementLigue = connection.createStatement();
+            ResultSet leagues = statementLigue.executeQuery(queryLigue);
+            
             while (leagues.next())
-                GestionPersonnel.addLeague(leagues.getInt(1), leagues.getString(2));
+            {
+                int ligueId = leagues.getInt("id");
+                String ligueName = leagues.getString("nom");
+                Ligue ligue = gestionPersonnel.addLeague(ligueId, ligueName);
+
+                // Charger les employés de cette ligue
+                String queryEmploye = "SELECT * FROM employe WHERE id_ligue = ?";
+                PreparedStatement statementEmploye = connection.prepareStatement(queryEmploye);
+                statementEmploye.setInt(1, ligueId);
+                ResultSet employes = statementEmploye.executeQuery();
+
+                while (employes.next())
+                {
+                    int employeId = employes.getInt("id");
+                    String nom = employes.getString("nom");
+                    String prenom = employes.getString("prenom");
+                    String email = employes.getString("mail");
+                    String password = employes.getString("mdp");
+                    LocalDate arrivee = employes.getDate("arrive") != null ? employes.getDate("arrive").toLocalDate() : null;
+                    LocalDate depart = employes.getDate("depart") != null ? employes.getDate("depart").toLocalDate() : null;
+
+                    // Instancier un objet Employe
+                    new Employe(gestionPersonnel, employeId, ligue, nom, prenom, email, password, arrivee, depart);
+                }
+            }
         }
         catch (SQLException e)
         {
             System.out.println(e);
         }
-        return GestionPersonnel;
+        return gestionPersonnel;
     }
 
     @Override

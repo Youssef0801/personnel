@@ -159,9 +159,14 @@ public class JDBC implements Passerelle
         try 
         {
             PreparedStatement statement = connection.prepareStatement(
-                "UPDATE ligue SET nom = ? WHERE id = ?");
+                "UPDATE ligue SET nom = ?, id_administrateur = ? WHERE id = ?");
             statement.setString(1, league.getName());
-            statement.setInt(2, league.getId());
+            if (league.getAdministrator() != null) {
+                statement.setInt(2, league.getAdministrator().getId());
+            } else {
+                statement.setNull(2, java.sql.Types.INTEGER);
+            }
+            statement.setInt(3, league.getId());
             statement.executeUpdate();
         } 
         catch (SQLException exception) 

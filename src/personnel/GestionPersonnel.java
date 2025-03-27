@@ -140,6 +140,11 @@ public class GestionPersonnel implements Serializable
         gateway.delete(employe);
     }
 
+    public void delete(Ligue league) throws SauvegardeImpossible
+    {
+        gateway.delete(league);
+    }
+
     /**
      * Returns the root (super-user).
      * @return the root.

@@ -162,7 +162,15 @@ public class Ligue implements Serializable, Comparable<Ligue>
     
     public void remove()
     {
-        personnelManagement.remove(this);
+        try 
+        {
+            personnelManagement.delete(this); // Supprime la ligue de la base de données
+            personnelManagement.remove(this); // Supprime la ligue de la liste en mémoire
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
+        }
     }
     
 

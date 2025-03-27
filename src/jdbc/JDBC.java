@@ -45,6 +45,7 @@ public class JDBC implements Passerelle
             {
                 int ligueId = leagues.getInt("id");
                 String ligueName = leagues.getString("nom");
+                int adminId = leagues.getInt("id_administrateur"); // Récupérer l'ID de l'administrateur
                 Ligue ligue = gestionPersonnel.addLeague(ligueId, ligueName);
 
                 // Charger les employés de cette ligue
@@ -64,7 +65,12 @@ public class JDBC implements Passerelle
                     LocalDate depart = employes.getDate("depart") != null ? employes.getDate("depart").toLocalDate() : null;
 
                     // Instancier un objet Employe
-                    new Employe(gestionPersonnel, employeId, ligue, nom, prenom, email, password, arrivee, depart);
+                    Employe employe = new Employe(gestionPersonnel, employeId, ligue, nom, prenom, email, password, arrivee, depart);
+
+                    // Vérifier si cet employé est l'administrateur de la ligue
+                    if (employeId == adminId) {
+                        ligue.setAdministrator(employe); // Définir l'administrateur de la ligue
+                    }
                 }
             }
         }

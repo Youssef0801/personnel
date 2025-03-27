@@ -1,195 +1,234 @@
-package jdbc;
+package personnel;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-import personnel.*;
+/**
+ * Employé d'une ligue hébergée par la M2L. Certains peuvent 
+ * être administrateurs des employés de leur ligue.
+ * Un seul employé, rattaché à aucune ligue, est le root.
+ * Il est impossible d'instancier directement un employé, 
+ * il faut passer la méthode {@link Ligue#addEmploye addEmploye}.
+ */
 
-public class JDBC implements Passerelle 
+public class Employe implements Serializable, Comparable<Employe>
 {
-    Connection connection;
+    private static final long serialVersionUID = 4795721718037994734L;
+    private String name, firstName, password, email;
+    private Ligue league;
+    private int id = -1;
+    private LocalDate arrival, departure;
+    private GestionPersonnel personnelManagement;
+    private InvalideDate invalidArrival;
+    private InvalideDate invalidDeparture;
 
-    public JDBC()
+    Employe(GestionPersonnel personnelManagement, Ligue league, String name, String firstName, String email, String password, LocalDate arrival, LocalDate departure) throws SauvegardeImpossible
     {
-        try
+        this(personnelManagement, -1, league, name, firstName, email, password, arrival, departure);
+        this.id = personnelManagement.insert(this);
+    }
+    
+    public Employe(GestionPersonnel personnelManagement, int id, Ligue league, String name, String firstName, String email, String password, LocalDate arrival, LocalDate departure) {
+        this.id = id;
+        this.personnelManagement = personnelManagement;
+        this.name = name;
+        this.firstName = firstName;
+        this.password = password;
+        this.email = email;
+        this.arrival = arrival;
+        this.departure = departure;
+        this.league = league;
+    }
+    
+    public boolean isAdmin(Ligue league)
+    {
+        return league.getAdministrator() == this;
+    }
+    
+    public boolean isRoot()
+    {
+        return personnelManagement.getRoot() == this;
+    }
+    
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+        try 
         {
-            Class.forName(Credentials.getDriverClassName());
-            connection = DriverManager.getConnection(Credentials.getUrl(), Credentials.getUser(), Credentials.getPassword());
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
         }
-        catch (ClassNotFoundException e)
+    }
+
+    public String getFirstName()
+    {
+        return firstName;
+    }
+    
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+        try 
         {
-            System.out.println("JDBC driver not installed.");
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
         }
-        catch (SQLException e)
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+    
+    public void setEmail(String email)
+    {
+        this.email = email;
+        try 
         {
-            System.out.println(e);
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkPassword(String password)
+    {
+        return this.password.equals(password);
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+        try 
+        {
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
         }
     }
     
-    @Override
-    public GestionPersonnel getGestionPersonnel() 
+    public String getPassword()
     {
-        GestionPersonnel gestionPersonnel = new GestionPersonnel();
-        try 
+        return password;
+    }
+
+    public Ligue getLeague()
+    {
+        return league;
+    }
+
+    public void remove()
+    {
+        Employe root = personnelManagement.getRoot();
+        if (this != root)
         {
-            String queryLigue = "SELECT * FROM ligue";
-            Statement statementLigue = connection.createStatement();
-            ResultSet leagues = statementLigue.executeQuery(queryLigue);
-            
-            while (leagues.next())
+            if (isAdmin(getLeague()))
+                getLeague().setAdministrator(root);
+            getLeague().remove(this);
+            try 
             {
-                int ligueId = leagues.getInt("id");
-                String ligueName = leagues.getString("nom");
-                Ligue ligue = gestionPersonnel.addLeague(ligueId, ligueName);
-
-                // Charger les employés de cette ligue
-                String queryEmploye = "SELECT * FROM employe WHERE id_ligue = ?";
-                PreparedStatement statementEmploye = connection.prepareStatement(queryEmploye);
-                statementEmploye.setInt(1, ligueId);
-                ResultSet employes = statementEmploye.executeQuery();
-
-                while (employes.next())
-                {
-                    int employeId = employes.getInt("id");
-                    String nom = employes.getString("nom");
-                    String prenom = employes.getString("prenom");
-                    String email = employes.getString("mail");
-                    String password = employes.getString("mdp");
-                    LocalDate arrivee = employes.getDate("arrive") != null ? employes.getDate("arrive").toLocalDate() : null;
-                    LocalDate depart = employes.getDate("depart") != null ? employes.getDate("depart").toLocalDate() : null;
-
-                    // Instancier un objet Employe
-                    new Employe(gestionPersonnel, employeId, ligue, nom, prenom, email, password, arrivee, depart);
-                }
+                personnelManagement.delete(this); // Supprime l'employé de la base de données
+            } 
+            catch (SauvegardeImpossible e) 
+            {
+                e.printStackTrace();
             }
         }
-        catch (SQLException e)
-        {
-            System.out.println(e);
-        }
-        return gestionPersonnel;
-    }
-
-    @Override
-    public void saveGestionPersonnel(GestionPersonnel GestionPersonnel) throws SauvegardeImpossible 
-    {
-        close();
+        else
+            throw new ImpossibleDeSupprimerRoot();
     }
     
-    public void close() throws SauvegardeImpossible
+    public LocalDate getArrival()
     {
-        try
-        {
-            if (connection != null)
-                connection.close();
+        return arrival;
+    }
+    
+    public void setArrival(LocalDate arrival) throws InvalideDate
+    {
+        if (this.departure != null && this.departure.isBefore(arrival)) {
+            throw new InvalideDate(null);
         }
-        catch (SQLException e)
+        this.arrival = arrival;
+        try 
         {
-            throw new SauvegardeImpossible(e);
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
         }
     }
     
-    @Override
-    public int insert(Ligue league) throws SauvegardeImpossible 
+    public LocalDate getDeparture()
     {
+        return departure;
+    }
+    
+    public void setDeparture(LocalDate departure) throws InvalideDate
+    {
+        if (this.arrival != null && this.arrival.isAfter(departure)) {
+            throw new InvalideDate(null);
+        }
+        this.departure = departure;
         try 
         {
-            PreparedStatement statement;
-            statement = connection.prepareStatement(
-                    "insert into ligue (nom) values(?)", Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, league.getName());		
-            statement.executeUpdate();
-            ResultSet id = statement.getGeneratedKeys();
-            id.next();
-            return id.getInt(1);
+            personnelManagement.update(this);
         } 
-        catch (SQLException exception) 
+        catch (SauvegardeImpossible e) 
         {
-            exception.printStackTrace();
-            throw new SauvegardeImpossible(exception);
-        }		
+            e.printStackTrace();
+        }
+    }   
+
+    @Override
+    public int compareTo(Employe other)
+    {
+        int cmp = getName().compareTo(other.getName());
+        if (cmp != 0)
+            return cmp;
+        return getFirstName().compareTo(other.getFirstName());
     }
     
     @Override
-    public int insert(Employe employee) throws SauvegardeImpossible {
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO employe (nom, prenom, mail, mdp, arrive, depart, id_ligue) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS
-            );
-            statement.setString(1, employee.getName());
-            statement.setString(2, employee.getFirstName());
-            statement.setString(3, employee.getEmail());
-            statement.setString(4, employee.getPassword());
-            statement.setDate(5, employee.getArrival() != null ? java.sql.Date.valueOf(employee.getArrival()) : null);
-            statement.setDate(6, employee.getDeparture() != null ? java.sql.Date.valueOf(employee.getDeparture()) : null);
-            if (employee.getLeague() != null) {
-                statement.setInt(7, employee.getLeague().getId());
-            } else {
-                statement.setNull(7, java.sql.Types.INTEGER);
-            }
-
-            statement.executeUpdate();
-            ResultSet id = statement.getGeneratedKeys();
-            if (id.next()) {
-                return id.getInt(1); // Retourne l'ID généré
-            } else {
-                throw new SauvegardeImpossible(new Exception("Failed to retrieve generated ID."));
-            }
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-            throw new SauvegardeImpossible(exception);
-        }
-    }
-
-    @Override
-    public void update(Ligue league) throws SauvegardeImpossible 
+    public String toString()
     {
-        try 
-        {
-            PreparedStatement statement = connection.prepareStatement(
-                "UPDATE ligue SET nom = ? WHERE id = ?");
-            statement.setString(1, league.getName());
-            statement.setInt(2, league.getId());
-            statement.executeUpdate();
-        } 
-        catch (SQLException exception) 
-        {
-            exception.printStackTrace();
-            throw new SauvegardeImpossible(exception);
+        String res = name + " " + firstName + " " + email + " " + arrival;
+        if (departure != null) {
+            res += " " + departure;
         }
+        res += " (";
+        if (isRoot())
+            res += "super-user";
+        else if (isAdmin(league))
+            res += "Administrator";
+        else
+            res += league.toString();
+        return res + ")";
     }
 
-    @Override
-    public void update(Employe employee) throws SauvegardeImpossible 
-    {
-        try 
-        {
-            PreparedStatement statement = connection.prepareStatement(
-                "UPDATE employe SET nom = ?, prenom = ?, mail = ?, mdp = ?, arrive = ?, depart = ?, id_ligue = ? WHERE id = ?");
-            statement.setString(1, employee.getName());
-            statement.setString(2, employee.getFirstName());
-            statement.setString(3, employee.getEmail());
-            statement.setString(4, employee.getPassword());
-            statement.setDate(5, employee.getArrival() != null ? java.sql.Date.valueOf(employee.getArrival()) : null);
-            statement.setDate(6, employee.getDeparture() != null ? java.sql.Date.valueOf(employee.getDeparture()) : null);
-            if (employee.getLeague() != null) {
-                statement.setInt(7, employee.getLeague().getId());
-            } else {
-                statement.setNull(7, java.sql.Types.INTEGER);
-            }
-            statement.setInt(8, employee.getId());
-            statement.executeUpdate();
-        } 
-        catch (SQLException exception) 
-        {
-            exception.printStackTrace();
-            throw new SauvegardeImpossible(exception);
-        }
-    }
 }

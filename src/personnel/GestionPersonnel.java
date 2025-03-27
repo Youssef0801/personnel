@@ -120,9 +120,9 @@ public class GestionPersonnel implements Serializable
     {
         return gateway.insert(league);
     }
-    int insert(Employe employee) throws SauvegardeImpossible
+    int insert(Employe employe) throws SauvegardeImpossible
     {
-        return gateway.insert(employee);
+        return gateway.insert(employe);
     }
 
     public void update(Ligue league) throws SauvegardeImpossible
@@ -130,9 +130,14 @@ public class GestionPersonnel implements Serializable
         gateway.update(league);
     }
 
-    public void update(Employe employee) throws SauvegardeImpossible
+    public void update(Employe employe) throws SauvegardeImpossible
     {
-        gateway.update(employee);
+        gateway.update(employe);
+    }
+
+    public void delete(Employe employe) throws SauvegardeImpossible
+    {
+        gateway.delete(employe);
     }
 
     /**

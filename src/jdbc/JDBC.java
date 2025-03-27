@@ -115,29 +115,32 @@ public class JDBC implements Passerelle
         }		
     }
     
+    @Override
     public int insert(Employe employee) throws SauvegardeImpossible {
         try {
-            PreparedStatement statement;
-            statement = connection.prepareStatement(
-                    "insert into employe (nom, prenom, mail, mdp, arrive, depart, id_ligue, id_niveau_acces ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL )",
-                    Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO employe (nom, prenom, mail, mdp, arrive, depart, id_ligue) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
+            );
             statement.setString(1, employee.getName());
             statement.setString(2, employee.getFirstName());
             statement.setString(3, employee.getEmail());
-            statement.setString(4, employee.getPassword()); // Retrieve the password
-            statement.setDate(5, employee.getArrival() != null ? java.sql.Date.valueOf(employee.getArrival()) : null); // Convert LocalDate to SQL Date
-            statement.setDate(6, employee.getDeparture() != null ? java.sql.Date.valueOf(employee.getDeparture()) : null); // Handle null dates
-            
+            statement.setString(4, employee.getPassword());
+            statement.setDate(5, employee.getArrival() != null ? java.sql.Date.valueOf(employee.getArrival()) : null);
+            statement.setDate(6, employee.getDeparture() != null ? java.sql.Date.valueOf(employee.getDeparture()) : null);
             if (employee.getLeague() != null) {
                 statement.setInt(7, employee.getLeague().getId());
             } else {
                 statement.setNull(7, java.sql.Types.INTEGER);
             }
-            
+
             statement.executeUpdate();
             ResultSet id = statement.getGeneratedKeys();
-            id.next();
-            return id.getInt(1);
+            if (id.next()) {
+                return id.getInt(1); // Retourne l'ID généré
+            } else {
+                throw new SauvegardeImpossible(new Exception("Failed to retrieve generated ID."));
+            }
         } catch (SQLException exception) {
             exception.printStackTrace();
             throw new SauvegardeImpossible(exception);
@@ -181,6 +184,23 @@ public class JDBC implements Passerelle
                 statement.setNull(7, java.sql.Types.INTEGER);
             }
             statement.setInt(8, employee.getId());
+            statement.executeUpdate();
+        } 
+        catch (SQLException exception) 
+        {
+            exception.printStackTrace();
+            throw new SauvegardeImpossible(exception);
+        }
+    }
+
+    @Override
+    public void delete(Employe employe) throws SauvegardeImpossible 
+    {
+        try 
+        {
+            PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM employe WHERE id = ?");
+            statement.setInt(1, employe.getId());
             statement.executeUpdate();
         } 
         catch (SQLException exception) 

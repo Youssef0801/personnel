@@ -68,6 +68,14 @@ public class Employe implements Serializable, Comparable<Employe>
     public void setName(String name)
     {
         this.name = name;
+        try 
+        {
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
+        }
     }
 
     public String getFirstName()
@@ -78,6 +86,14 @@ public class Employe implements Serializable, Comparable<Employe>
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;
+        try 
+        {
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
+        }
     }
 
     public String getEmail()
@@ -88,6 +104,14 @@ public class Employe implements Serializable, Comparable<Employe>
     public void setEmail(String email)
     {
         this.email = email;
+        try 
+        {
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
+        }
     }
 
     public boolean checkPassword(String password)
@@ -98,6 +122,14 @@ public class Employe implements Serializable, Comparable<Employe>
     public void setPassword(String password)
     {
         this.password = password;
+        try 
+        {
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
+        }
     }
     
     public String getPassword()
@@ -128,19 +160,19 @@ public class Employe implements Serializable, Comparable<Employe>
         return arrival;
     }
     
-    public void setArrival(LocalDate arrival) throws InvalideDate {
-        try {
-            if (this.departure != null) {
-                if (this.departure.isAfter(arrival)) {
-                    this.arrival = arrival;
-                } else {
-                    throw new InvalideDate(invalidArrival);
-                }
-            } else {
-                this.arrival = arrival;
-            }
-        } catch (InvalideDate invalidArrival) {
-            throw new InvalideDate(invalidArrival);
+    public void setArrival(LocalDate arrival) throws InvalideDate
+    {
+        if (this.departure != null && this.departure.isBefore(arrival)) {
+            throw new InvalideDate(null);
+        }
+        this.arrival = arrival;
+        try 
+        {
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
         }
     }
     
@@ -149,15 +181,19 @@ public class Employe implements Serializable, Comparable<Employe>
         return departure;
     }
     
-    public void setDeparture(LocalDate departure) throws InvalideDate {
-        try {
-            if (this.arrival.isBefore(departure)) {
-                this.departure = departure;
-            } else {
-                throw new InvalideDate(invalidDeparture);
-            }
-        } catch (InvalideDate invalidDeparture) {
-            throw new InvalideDate(invalidDeparture);
+    public void setDeparture(LocalDate departure) throws InvalideDate
+    {
+        if (this.arrival != null && this.arrival.isAfter(departure)) {
+            throw new InvalideDate(null);
+        }
+        this.departure = departure;
+        try 
+        {
+            personnelManagement.update(this);
+        } 
+        catch (SauvegardeImpossible e) 
+        {
+            e.printStackTrace();
         }
     }   
 
